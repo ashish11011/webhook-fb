@@ -1,6 +1,28 @@
+const VERIFY_TOKEN = "avolvelabs_whatsapp_token_2211";
 export async function facebookWebhookHandler(req, res) {
-    const rows = [""];
-    res.json({ data: rows });
+    const mode = req.query["hub.mode"];
+    const token = req.query["hub.verify_token"];
+    const challenge = req.query["hub.challenge"];
+    if (mode === "subscribe" && token === VERIFY_TOKEN) {
+        console.log("Webhook verified");
+        return res.status(200).send(String(challenge));
+    }
+    console.log("Verification failed:", { mode, token });
+    return res.sendStatus(403);
+}
+export async function facebookWebhookPostHandler(req, res) {
+    const payload = req.body;
+    for (const entry of payload.entry ?? []) {
+        for (const change of entry.changes ?? []) {
+            for (const message of change.value?.messages ?? []) {
+                console.log("WhatsApp message received:", message);
+            }
+            for (const status of change.value?.statuses ?? []) {
+                console.log("WhatsApp message status:", status);
+            }
+        }
+    }
+    return res.sendStatus(200);
 }
 // {
 //   "object": "whatsapp_business_account",

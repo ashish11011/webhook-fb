@@ -15,11 +15,6 @@ app.get("/",(req,res)=>{
   return res.status(200).json({message:"done"});
 });
 
-app.get("/webhook/fb",(req,res)=>{
-  return res.status(200).json({message:"done"});
-});
-
-
 // Allow the Next.js frontend (different origin/port) to call this API.
 app.use((req, res, next) => {
   res.header(

@@ -7,6 +7,9 @@ import webhookRouter from "./routes/webhook.routes.js";
 const app = express();
 app.use(express.json());
 app.use(logger);
+app.get("/", (req, res) => {
+    return res.status(200).json({ message: "done" });
+});
 // Allow the Next.js frontend (different origin/port) to call this API.
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", process.env.CORS_ORIGIN ?? "http://localhost:3000");
