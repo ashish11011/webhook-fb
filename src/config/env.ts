@@ -14,3 +14,7 @@ export const redisPort = parsePort(process.env.REDIS_PORT, 10074);
 
 export const databaseUrl = process.env.DATABASE_URL ?? "";
 export const DATABASE_URL = databaseUrl;
+
+export const whatsappAccessToken = process.env.WHATSAPP_ACCESS_TOKEN ?? "";
+export const whatsappPhoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID ?? "";
+export const whatsappApiVersion = process.env.WHATSAPP_API_VERSION ?? "v23.0";
