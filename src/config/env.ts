@@ -1,3 +1,6 @@
+
+import "dotenv/config";
+
 function parsePort(value: string | undefined, fallback: number) {
   const parsed = Number.parseInt(value ?? "", 10);
 
