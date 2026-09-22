@@ -1,4 +1,4 @@
-import { pgTable, timestamp, uuid, varchar, serial } from "drizzle-orm/pg-core";
+import { pgTable, timestamp, uuid, varchar, serial, jsonb } from "drizzle-orm/pg-core";
 import postgres from "postgres";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { databaseUrl } from "../src/config/env.js";
@@ -32,32 +32,29 @@ export const salesforceConnect = pgTable("salesforce_connect", {
 export const whatsappConnect = pgTable("whatsapp_connect", {
     id: uuid("id").defaultRandom().primaryKey(),
     tenantId: serial("tenant_id").references(() => tenants.tenantId, { onDelete: "cascade", onUpdate: "cascade" }).notNull(),
-    whatsappBusinessNumber: varchar("whatsapp_business_number", { length: 20 }).notNull().unique(),
     businessAccountId: varchar("bussiness_account_id", { length: 255 }).notNull(),
     apiVersion: varchar("api_version", { length: 512 }).notNull(),
     accessToken: varchar("access_token", { length: 512 }),
     encryptedToken: varchar("encrypted_token", { length: 512 }).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
-export const contacts = pgTable("contacts", {
+export const whatsappConnectNumber = pgTable("whatsapp_connect_number", {
     id: uuid("id").defaultRandom().primaryKey(),
-    tenantId: serial("tenant_id").references(() => tenants.tenantId, { onDelete: "cascade", onUpdate: "cascade" }).notNull(),
-    salesforceContactId: varchar("salesforce_contact_id", { length: 255 }).notNull().unique(),
-    phoneNumber: varchar("phone_number", { length: 20 }).notNull().unique(),
+    whatsappConnectId: uuid("whatsapp_connect_id").references(() => whatsappConnect.id, { onDelete: "cascade", onUpdate: "cascade" }).notNull(),
+    numberId: varchar("number_id", { length: 512 }).notNull().unique(),
+    phoneNumber: varchar("phone_number", { length: 512 }).notNull().unique(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
-export const conversations = pgTable("conversations", {
+export const ApiMapping = pgTable("api_mapping", {
     id: uuid("id").defaultRandom().primaryKey(),
-    tenantId: serial("tenant_id").references(() => tenants.tenantId, { onDelete: "cascade", onUpdate: "cascade" }).notNull(),
-    contactId: uuid("contact_id").notNull(),
-    status: varchar("status", { length: 50 }).notNull(),
-    assignedUser: varchar("assigned_user", { length: 255 }).notNull(),
-});
-export const messages = pgTable("messages", {
-    id: uuid("id").defaultRandom().primaryKey(),
-    conversationId: uuid("conversation_id").references(() => conversations.id, { onDelete: "cascade", onUpdate: "cascade" }).notNull(),
-    direction: varchar("direction", { length: 10 }).notNull(),
-    content: varchar("content", { length: 1000 }).notNull(),
-    whatsappMessageId: varchar("whatsapp_message_id", { length: 255 }).notNull(),
-    status: varchar("status", { length: 50 }).notNull(),
+    salesforceConnectId: uuid("salesforce_connect_id").references(() => salesforceConnect.id, { onDelete: "cascade", onUpdate: "cascade" }).notNull(),
+    apiEndpoint: varchar("api_endpoint", { length: 255 }).notNull(),
+    apiMappingType: varchar("api_mapping_type", { length: 255 }).notNull(),
+    fieldMapping: jsonb("field_mapping").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 // Supabase's transaction-mode pooler (port 6543) doesn't support prepared
 // statements, so they're disabled here.

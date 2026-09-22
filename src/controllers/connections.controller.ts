@@ -128,7 +128,6 @@ export async function saveWhatsappConnect(req: Request, res: Response) {
   if (tenantId === null) return;
 
   const {
-    whatsappBusinessNumber,
     businessAccountId,
     apiVersion,
     accessToken,
@@ -142,8 +141,7 @@ export async function saveWhatsappConnect(req: Request, res: Response) {
       .where(eq(whatsappConnect.tenantId, tenantId));
 
     const values = {
-      whatsappBusinessNumber,
-      businessAccountId,
+        businessAccountId,
       apiVersion,
       accessToken,
       encryptedToken,
@@ -152,7 +150,7 @@ export async function saveWhatsappConnect(req: Request, res: Response) {
     if (existing) {
       const [row] = await db
         .update(whatsappConnect)
-        .set(values)
+        .set({ ...values, updatedAt: new Date() })
         .where(eq(whatsappConnect.tenantId, tenantId))
         .returning();
       return res.json({ data: row });

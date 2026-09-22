@@ -18,10 +18,10 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
+    "@types/express": "^5.0.6",
     "dotenv": "^16.5.0",
     "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.2",
-    "@types/express": "^5.0.6",
     "express": "^5.2.1",
     "pg": "^8.23.0",
     "postgres": "^3.4.9",
